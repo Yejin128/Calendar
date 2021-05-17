@@ -1,10 +1,30 @@
 package calendar;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 public class Calendar {
 
 	private static final int[] MAX_DAYS = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	private static final int[] LEAP_MAX_DAYS = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
+	
+	private HashMap <Date, String> planMap;
+	
+	public Calendar() {
+		planMap=new HashMap<Date,String>();
+	}
+	public void registerPlan(String strData, String plan) throws ParseException{
+		Date date= new SimpleDateFormat("yyyy-MM-dd").parse(strData);
+		planMap.put(date, plan);
+	}
+	
+	public String searchPlan(String strData) throws ParseException{
+		Date date= new SimpleDateFormat("yyyy-MM-dd").parse(strData);
+		String plan=planMap.get(date);
+		return plan;
+	}
+	
+	
 	public boolean isLeapYear(int year) {
 		if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
 			return true;
@@ -59,7 +79,7 @@ public class Calendar {
 
 	private int getWeekDay(int year, int month, int day) {
 		int syear = 1970;
-		final int STANDARD_WEEKDAY = 3; //1970/Jan/1st = Thursday
+		final int STANDARD_WEEKDAY = 4; //1970/Jan/1st = Thursday
 		
 		int count = 0;
 		
@@ -73,7 +93,7 @@ public class Calendar {
 			count += delta;
 		}
 		
-		count += day;
+		count += day-1;
 		
 		int weekday = (count + STANDARD_WEEKDAY) % 7;
 		return weekday;
